@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>朗读练习 - 30秒倒计时</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      background-color: #f5f7fa;
+      text-align: center;
+      padding: 40px;
+    }
+    #passage {
+      font-size: 1.4em;
+      line-height: 1.6;
+      margin: 30px auto;
+      max-width: 800px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    #timer {
+      font-size: 2em;
+      color: #e74c3c;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>📘 朗读练习（30秒）</h1>
+  <div id="passage">点击“开始练习”抽取段落</div>
+  <div id="timer">30</div>
+  <button onclick="startReading()">开始练习</button>
+
+  <script>
+    // 用模板字符串逐条存放段落，避免因内部引号或换行导致语法错误
+    const passages = [
+`Increasingly, the one that draws the world’s attention is not the factory-and-warehouse aspect of China, but the new innovation-driven China that is poised to reshape the future of global tech.`,
+`However, China has accomplished a remarkable feat in transforming itself from a low-cost manufacturing economy to a higher-value, innovation-led one, in only a few decades.`,
+`After years of hard work, China is now leading the world in the field of aerospace technology, high-speed railways, 5G-enabled technologies, artificial intelligence, and deep-sea exploration.`,
+`“What Silicon Valley has done is impressive, but now I see the most potential in China,” said one executive. The world celebrates Silicon Valley as a center of innovation, but many Chinese firms are catching up quickly.`,
+`They were the first generation to experience the benefits of China’s reform and opening-up, which began in 1978. Unlike their parents, who lived through hardship and poverty, they have never known the same struggles.`,
+`Born as digital natives with information at their fingertips, these youngsters are more sophisticated, have exposure to international cultures and ideas, and enjoy a modern healthy lifestyle.`,
+`The French, for instance, cannot get the hang of queuing. They try and try, but it is beyond them. Wherever you go in Paris, you see orderly lines waiting at bus stops, but as soon as the bus pulls up chaos ensues.`,
+`To my continuing amazement, many of the British also turn their fork upside down and balance the food on the back of it. I’ve lived in England for over a decade and I still have to fight an instinct or two.`,
+`But that’s the great thing of foreign travel. I can’t think of anything that excites a greater sense of childlike wonder than to be in a country where you are ignorant of almost everything.`,
+`Whenever I look through all those files of things I've saved over the years, I usually stumble upon some long-forgotten newspaper article I have tucked away. I give it a casual glance, turn it over, and smile.`,
+`Most people take photos when they travel, but not everyone jots down drawings and descriptions in a journal. I've filled 30-some notebooks with a decade's worth of lost travel moments.`,
+`Last October, I traveled to south-central France to follow in the footsteps Robert Louis Stevenson took in one of his books. When I came to a small lake, I knew I was near the spot where Stevenson once sat.`,
+`I miss the way you challenge me. Every day. Pushing me farther and faster, you encourage me to go past the limits and expectations I set for myself — miles and miles past them.`,
+`All my weaknesses, celebrations, highs and lows, you’ve experienced them right alongside me. My mom’s cancer? You were my cure. My dad’s alcohol addiction? You were my distraction.`,
+`Now, I find myself fighting to forget our past. I’m trying hard not to need you because I know you can’t be there for me forever, and I won’t always be able to give you what you need.`,
+`And I’m excited by the prospect of taking each hill, each curve, each hurdle, one step at a time, one foot in front of the other, just like we’ve always done.`,
+`After the US survived two world wars and the economic fragility they caused, leisure became more accessible for the American middle class. With economic recovery and technological development, leisure spread.`,
+`Hobbies were something a majority of people could enjoy, while the side hustle is more common among the middle class. And even those who enjoy leisure careers might be better to take a break from time to time.`,
+`But after so many hundreds of thousands of years of living as hunter-gatherers, it’s no surprise that hunting and gathering are still instinctive to us. And this brings us back to shopping instincts.`,
+`Of course, it’s a generalization to say, “Women like shopping and men don’t”. However, there is evidence that this isn’t a complete myth. A survey of 2,000 British people found nuanced differences.`,
+`More seriously, this might also help us to overcome the impulse to buy unnecessary material goods. Once you become aware of the reasons for a behavior, it becomes easier to control and overcome it.`,
+`Book reviewers are three or four times more likely to use words like “husband,” “marriage,” and “mother” to describe books written by women between 2000 and 2009, and nearly twice as likely to mention family roles.`,
+`Since the early 2000s, gender inequality in the culture industry — literature, music, and film — has gained much attention. In the world of writing, gender bias has come to be seen as part of a structural problem.`,
+`Stories tell us what it is to be human, giving us a context for the past and an insight towards the future. Paradoxically, we think we are escaping ourselves but the best stories take us back deep within.`,
+`In today’s crowded, louder, more fast-paced world, night’s darkness can provide solitude and quietness, qualities increasingly in short supply. Darkness has always been considered invaluable for reflection.`
+    ];
+
+    let countdownInterval;
+
+    function startReading() {
+      clearInterval(countdownInterval);
+      // 随机选一段
+      const passage = passages[Math.floor(Math.random() * passages.length)];
+      document.getElementById('passage').innerText = passage;
+      let timeLeft = 30;
+      document.getElementById('timer').innerText = timeLeft;
+
+      countdownInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval);
+          document.getElementById('timer').innerText = '⏰ 时间到！';
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
