@@ -27,18 +27,19 @@
       color: #27ae60;
       margin-top: 20px;
     }
-    button {
+    .btn {
       padding: 10px 20px;
       font-size: 1.1em;
-      margin-top: 20px;
+      margin: 12px 8px;
       cursor: pointer;
       border: none;
       border-radius: 6px;
-      background: #27ae60;
       color: white;
     }
+    #startBtn { background: #27ae60; }
+    #reselectBtn { background: #2d6cdf; }
     button:disabled {
-      background: #95d5a3;
+      opacity: 0.6;
       cursor: default;
     }
   </style>
@@ -47,10 +48,13 @@
   <h1>📝 翻译练习（30秒）</h1>
   <div id="sentences">点击“开始练习”抽取句子</div>
   <div id="timer">30</div>
-  <button id="startBtn">开始练习</button>
+  <div>
+    <button id="startBtn" class="btn">开始练习（重置计时并抽句）</button>
+    <button id="reselectBtn" class="btn">重新选择句子（不重置计时）</button>
+  </div>
 
   <script>
-    // 修复：原文件中字符串之间缺少逗号导致语法错误，已把每句作为独立数组项
+    // 句子数组（已修复原来缺少逗号的语法错误）
     const sentences = [
       "中国的移动支付革命无论是速度还是规模都让人惊叹。",
       "孔子学院已经成为推广、传播中国文化及汉学的平台。",
@@ -74,43 +78,57 @@
       "人民有信仰，国家有力量，民族有希望。"
     ];
 
-    let countdownInterval;
+    let countdownInterval = null;
+    let timeLeft = 30;
+
     const timerEl = document.getElementById('timer');
     const sentencesEl = document.getElementById('sentences');
     const startBtn = document.getElementById('startBtn');
+    const reselectBtn = document.getElementById('reselectBtn');
 
-    function startTranslation() {
-      clearInterval(countdownInterval);
-
-      // 随机抽取3句不重复的句子
+    // 将选句逻辑抽成函数，供开始和重新选择共用
+    function pickSentences() {
       const shuffled = [...sentences].sort(() => 0.5 - Math.random());
       const selected = shuffled.slice(0, 3);
-      // 显示序号从1开始，句内不再包含原来的序号，避免重复编号混乱
       const display = selected.map((s, i) => `<strong>${i + 1}.</strong> ${escapeHtml(s)}`).join('<br><br>');
       sentencesEl.innerHTML = display;
+    }
 
-      let timeLeft = 30;
+    function startTranslation() {
+      // 重置并开始计时，选新句子
+      clearInterval(countdownInterval);
+      pickSentences();
+
+      timeLeft = 30;
       timerEl.textContent = timeLeft;
-      startBtn.disabled = true;
 
       countdownInterval = setInterval(() => {
         timeLeft--;
-        timerEl.textContent = timeLeft > 0 ? timeLeft : '⏰ 时间到！';
-        if (timeLeft <= 0) {
+        if (timeLeft > 0) {
+          timerEl.textContent = timeLeft;
+        } else {
           clearInterval(countdownInterval);
-          startBtn.disabled = false;
+          countdownInterval = null;
+          timerEl.textContent = '⏰ 时间到！';
         }
       }, 1000);
     }
 
-    // 简单的 HTML 转义，防止注入问题（虽然内容是静态的）
+    function reselectSentences() {
+      // 重新选择句子，但不影响当前计时（如果计时未开始则不会启动计时）
+      pickSentences();
+    }
+
+    // 简单的 HTML 转义
     function escapeHtml(str) {
       return str.replace(/[&<>"']/g, function (m) {
         return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m];
       });
     }
 
+    // 绑定事件
     startBtn.addEventListener('click', startTranslation);
+    reselectBtn.addEventListener('click', reselectSentences);
   </script>
 </body>
 </html>
